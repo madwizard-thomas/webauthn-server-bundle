@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults public="false" />
+
+        <service id="madwizard_webauthn.config_factory" class="MadWizard\WebAuthnBundle\DependencyInjection\WebAuthnConfigurationFactory">
+            <argument /> <!-- filled in by dependency injection -->
+        </service>
+
+        <service id="madwizard_webauthn.config" class="MadWizard\WebAuthn\Config\WebAuthnConfiguration">
+            <factory service="madwizard_webauthn.config_factory" method="create" />
+        </service>
+
+        <service id="madwizard_webauthn.server" class="MadWizard\WebAuthn\Server\WebAuthnServer" public="true">
+            <argument key="$config" type="service" id="madwizard_webauthn.config" />
+        </service>
+
+        <service id="MadWizard\WebAuthn\Server\WebAuthnServer" alias="madwizard_webauthn.server" />
+
+        <!-- TODO: id or class as alias consistency -->
+
+        <service id="MadWizard\WebAuthnBundle\Manager\WebAuthnManager">
+            <argument key="MadWizard\WebAuthn\Server\WebAuthnServer" type="service" id="madwizard_webauthn.server" />
+            <argument key="MadWizard\WebAuthnBundle\Manager\ContextStorageInterface" type="service" id="MadWizard\WebAuthnBundle\Manager\SessionContextStorage" />
+        </service>
+
+        <service id="madwizard_webauthn.manager" alias="MadWizard\WebAuthnBundle\Manager\WebAuthnManager" public="true"/>
+
+        <service id="MadWizard\WebAuthnBundle\Manager\SessionContextStorage">
+            <argument key="Symfony\Component\HttpFoundation\RequestStack" type="service" id="request_stack" />
+        </service>
+
+        <service id="MadWizard\WebAuthnBundle\Templating\WebAuthnTwigExtension">
+            <tag name="twig.extension" />
+        </service>
+
+
+        <service id="madwizard_webauthn.context_session_bag" class="MadWizard\WebAuthnBundle\Session\ContextSessionBag" />
+    </services>
+</container>

@@ -1,0 +1,39 @@
+{
+    "name": "madwizard/webauthn-bundle",
+    "description": "Web Authentication Relying Party Symfony bundle",
+    "type": "symfony-bundle",
+    "autoload": {
+        "psr-4": {
+            "MadWizard\\WebAuthnBundle\\": "/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MadWizard\\WebAuthnBundle\\Tests\\": "Tests/"
+        }
+    },
+    "require": {
+        "php": "^7.1.3",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/dependency-injection": "^4.0",
+        "madwizard/webauthn": "master@dev",
+        "symfony/config": "^4.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "phpunit/phpunit": "^7.1"
+    },
+    "archive": {
+        "exclude": [
+            "/Tests",
+            "/phpunit.xml.dist"
+        ]
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Bleeker",
+            "email": "support@madwizard.org"
+        }
+    ]
+}

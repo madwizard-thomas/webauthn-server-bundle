@@ -1,0 +1,14 @@
+<div class="webauthn-container" id="webauthn_container_{{ options.contextKey }}">
+    <form method="post">
+        <script type="application/json" data-webauthn>{{
+            {
+                type: options.type,
+                request: options.requestJson,
+                formField: '#webauthn_response_' ~ options.contextKey,
+                container: '#webauthn_container_' ~ options.contextKey
+            }|json_encode|raw
+        }}</script>
+        <input type='hidden' name="_webauthn_response" id="webauthn_response_{{ options.contextKey }}">
+        <input type='hidden' name="_webauthn_context_key" value="{{ options.contextKey }}">
+    </form>
+</div>
