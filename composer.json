@@ -16,7 +16,7 @@
         "php": "^7.1.3",
         "symfony/framework-bundle": "^4.0",
         "symfony/dependency-injection": "^4.0",
-        "madwizard/webauthn": "master@dev",
+        "madwizard/webauthn": "dev-master",
         "symfony/config": "^4.0"
     },
     "require-dev": {
