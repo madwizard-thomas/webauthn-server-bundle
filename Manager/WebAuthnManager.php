@@ -3,14 +3,14 @@
 
 namespace MadWizard\WebAuthnBundle\Manager;
 
-use MadWizard\WebAuthn\Credential\UserCredentialInterface;
 use MadWizard\WebAuthn\Exception\WebAuthnException;
 use MadWizard\WebAuthn\Json\JsonConverter;
-use MadWizard\WebAuthn\Server\AssertionContext;
-use MadWizard\WebAuthn\Server\AttestationContext;
+use MadWizard\WebAuthn\Server\Authentication\AssertionContext;
 use MadWizard\WebAuthn\Server\Authentication\AuthenticationOptions;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationResult;
+use MadWizard\WebAuthn\Server\Registration\AttestationContext;
+use MadWizard\WebAuthn\Server\Registration\AttestationResult;
 use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
-use MadWizard\WebAuthn\Server\Registration\RegistrationResult;
 use MadWizard\WebAuthn\Server\WebAuthnServer;
 use MadWizard\WebAuthnBundle\Exception\ClientRegistrationException;
 use MadWizard\WebAuthnBundle\Exception\RegistrationException;
@@ -42,13 +42,13 @@ class WebAuthnManager
         return new ClientOptions('create', $registrationRequest->getClientOptionsJson(), $key);
     }
 
-    public function finishRegistrationFromRequest(Request $request) : RegistrationResult
+    public function finishRegistrationFromRequest(Request $request) : AttestationResult
     {
         $data = $this->extractRequestData($request);
         return $this->finishRegistration($data['response'], $data['contextKey']);
     }
 
-    public function finishRegistration(string $responseJson, string $contextKey) : RegistrationResult
+    public function finishRegistration(string $responseJson, string $contextKey) : AttestationResult
     {
         $this->handleJsonErrorResponse($responseJson);
 
@@ -60,9 +60,9 @@ class WebAuthnManager
 
         try {
             $credential = JsonConverter::decodeAttestationCredential($responseJson);
-            $registrationResult = $this->server->finishRegistration($credential, $context);
+            $attestationResult = $this->server->finishRegistration($credential, $context);
             $this->contextStorage->removeContext($contextKey);
-            return $registrationResult;
+            return $attestationResult;
         } catch (WebAuthnException $e) {
             throw new RegistrationException('Registration failed: ' . $e->getMessage(), 0, $e);
         }
@@ -75,13 +75,13 @@ class WebAuthnManager
         return new ClientOptions('get', $authenticationRequest->getClientOptionsJson(), $key);
     }
 
-    public function finishAuthenticationFromRequest(Request $request) : UserCredentialInterface
+    public function finishAuthenticationFromRequest(Request $request) : AuthenticationResult
     {
         $data = $this->extractRequestData($request);
         return $this->finishAuthentication($data['response'], $data['contextKey']);
     }
 
-    public function finishAuthentication(string $responseJson, string $contextKey) : UserCredentialInterface
+    public function finishAuthentication(string $responseJson, string $contextKey) : AuthenticationResult
     {
         $this->handleJsonErrorResponse($responseJson);
 
@@ -93,9 +93,9 @@ class WebAuthnManager
 
         try {
             $credential = JsonConverter::decodeAssertionCredential($responseJson);
-            $userCredential = $this->server->finishAuthentication($credential, $context);
+            $authenticationResult = $this->server->finishAuthentication($credential, $context);
             $this->contextStorage->removeContext($contextKey);
-            return $userCredential;
+            return $authenticationResult;
         } catch (WebAuthnException $e) {
             throw new RegistrationException('Registration failed: ' . $e->getMessage(), 0, $e);
         }

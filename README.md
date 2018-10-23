@@ -10,6 +10,14 @@ Resources
 
 [WebAuthn specification](https://www.w3.org/TR/webauthn/)
 
+Installation
+------------
+Installation via composer:
+```bash
+composer require madwizard/webauthn dev-master
+```
+
+
 Configuration
 -------------
 **Note: preliminary information**\
@@ -47,7 +55,7 @@ This is a work in progress bundle - any part can change at any time until a stab
     
     use MadWizard\WebAuthn\Credential\UserCredentialInterface;
     use MadWizard\WebAuthn\Format\ByteBuffer;
-    use MadWizard\WebAuthn\Crypto\COSEKey;
+    use MadWizard\WebAuthn\Crypto\CoseKey;
     
     class UserCred implements UserCredentialInterface
     {
@@ -56,7 +64,7 @@ This is a work in progress bundle - any part can change at any time until a stab
             // Return credential id (base64url encoded string)
         }
     
-        public function getPublicKey(): COSEKey
+        public function getPublicKey(): CoseKey
         {
             // Return public key
         }
@@ -112,7 +120,7 @@ Usage
 use MadWizard\WebAuthn\Exception\WebAuthnException;
 use MadWizard\WebAuthn\Format\ByteBuffer;
 use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
-use MadWizard\WebAuthn\Server\Registration\UserIdentity;
+use MadWizard\WebAuthn\Server\UserIdentity;
 use MadWizard\WebAuthnBundle\Manager\WebAuthnManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -225,7 +233,7 @@ class AuthenticationController extends Controller
                 $vars['clientOptions'] = $clientOptions;
             } else {
                 $result = $manager->finishAuthenticationFromRequest($request);
-                $vars['done'] = $result;
+                $vars['credentialId'] = $result->getUserCredential()->getCredentialId();
             }
         } catch(WebAuthnException $e) {
             // NOTE: do not pass exception messages to the client. The exception messages could contain
