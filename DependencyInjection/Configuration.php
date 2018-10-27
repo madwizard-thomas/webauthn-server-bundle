@@ -8,10 +8,20 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    private const NAME = 'madwizard_webauthn';
+
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('madwizard_webauthn');
+        $name = self::NAME;
+        if (\method_exists(TreeBuilder::class, 'getRootNode')) {
+            // Symfony 4.2+
+            $treeBuilder = new TreeBuilder(self::NAME);
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // Other versions
+            $treeBuilder = new TreeBuilder();
+            $rootNode = $treeBuilder->root($name);
+        }
 
         // TODO stricter validation
 
