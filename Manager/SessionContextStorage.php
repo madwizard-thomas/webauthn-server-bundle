@@ -4,21 +4,20 @@
 namespace MadWizard\WebAuthnBundle\Manager;
 
 use MadWizard\WebAuthn\Server\RequestContext;
-use MadWizard\WebAuthnBundle\Exception\SessionRequiredException;
 
 use MadWizard\WebAuthnBundle\Session\ContextSessionBag;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 class SessionContextStorage implements ContextStorageInterface
 {
     /**
-     * @var RequestStack
+     * @var SessionStorageInterface
      */
-    private $stack;
+    private $sessionStorage;
 
-    public function __construct(RequestStack $stack)
+    public function __construct(SessionStorageInterface $sessionStorage)
     {
-        $this->stack = $stack;
+        $this->sessionStorage = $sessionStorage;
     }
 
     public function addContext(RequestContext $context) : string
@@ -33,20 +32,12 @@ class SessionContextStorage implements ContextStorageInterface
 
     public function removeContext(string $key)
     {
-        return $this->getBag()->remove($key);
+        $this->getBag()->remove($key);
     }
 
     private function getBag() : ContextSessionBag
     {
-        $request = $this->stack->getCurrentRequest();
-        if ($request === null) {
-            throw new SessionRequiredException('No current request is available to get the current session.');
-        }
-        $session = $request->getSession();
-        if ($session === null) {
-            throw new SessionRequiredException('The current request has no session.');
-        }
-        $bag = $session->getBag(ContextSessionBag::NAME);
+        $bag = $this->sessionStorage->getBag(ContextSessionBag::NAME);
         /**
          * @var ContextSessionBag $bag
          */
