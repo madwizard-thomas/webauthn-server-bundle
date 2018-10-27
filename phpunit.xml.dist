@@ -1,4 +1,4 @@
-<phpunit>
+<phpunit bootstrap="vendor/autoload.php">
 
     <php>
         <ini name="xdebug.overload_var_dump" value="off" />
