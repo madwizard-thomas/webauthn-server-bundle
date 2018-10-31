@@ -55,6 +55,5 @@ class WebAuthnManagerTest extends TestCase
         $this->assertSame(['dummy' => 'dummy'], $clientOptions->getRequestJson());
         $this->assertSame('create', $clientOptions->getType());
         $this->assertSame('aabbccddee', $clientOptions->getContextKey());
-
     }
 }

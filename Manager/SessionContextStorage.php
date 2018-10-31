@@ -6,18 +6,18 @@ namespace MadWizard\WebAuthnBundle\Manager;
 use MadWizard\WebAuthn\Server\RequestContext;
 
 use MadWizard\WebAuthnBundle\Session\ContextSessionBag;
-use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionContextStorage implements ContextStorageInterface
 {
     /**
-     * @var SessionStorageInterface
+     * @var SessionInterface
      */
-    private $sessionStorage;
+    private $session;
 
-    public function __construct(SessionStorageInterface $sessionStorage)
+    public function __construct(SessionInterface $session)
     {
-        $this->sessionStorage = $sessionStorage;
+        $this->session = $session;
     }
 
     public function addContext(RequestContext $context) : string
@@ -37,7 +37,7 @@ class SessionContextStorage implements ContextStorageInterface
 
     private function getBag() : ContextSessionBag
     {
-        $bag = $this->sessionStorage->getBag(ContextSessionBag::NAME);
+        $bag = $this->session->getBag(ContextSessionBag::NAME);
         /**
          * @var ContextSessionBag $bag
          */

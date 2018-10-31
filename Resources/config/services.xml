@@ -31,7 +31,7 @@
         <service id="madwizard_webauthn.manager" alias="MadWizard\WebAuthnBundle\Manager\WebAuthnManager" public="true"/>
 
         <service id="MadWizard\WebAuthnBundle\Manager\SessionContextStorage">
-            <argument key="Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface" type="service" id="request_stack" />
+            <argument key="Symfony\Component\HttpFoundation\Session\SessionInterface" type="service" id="session" />
         </service>
 
         <service id="MadWizard\WebAuthnBundle\Templating\WebAuthnTwigExtension">
