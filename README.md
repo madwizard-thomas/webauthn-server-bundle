@@ -14,7 +14,7 @@ Installation
 ------------
 Installation via composer:
 ```bash
-composer require madwizard/webauthn dev-master
+composer require madwizard/webauthn-bundle:^0.0.1
 ```
 
 
