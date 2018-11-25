@@ -19,7 +19,7 @@ composer require madwizard/webauthn-bundle:^0.0.1
 
 Library reference
 -----------------
-Automatically built reference documentation (for both this library and the main WebAuthn library):
+Automatically built reference documentation (for both this library and the main WebAuthn library): \
 https://madwizard-thomas.github.io/webauthn/
 
 Configuration
