@@ -5,12 +5,12 @@ namespace MadWizard\WebAuthnBundle\Manager;
 
 use MadWizard\WebAuthn\Exception\WebAuthnException;
 use MadWizard\WebAuthn\Json\JsonConverter;
-use MadWizard\WebAuthn\Server\Authentication\AssertionContext;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationContext;
 use MadWizard\WebAuthn\Server\Authentication\AuthenticationOptions;
 use MadWizard\WebAuthn\Server\Authentication\AuthenticationResult;
-use MadWizard\WebAuthn\Server\Registration\AttestationContext;
-use MadWizard\WebAuthn\Server\Registration\AttestationResult;
+use MadWizard\WebAuthn\Server\Registration\RegistrationContext;
 use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
+use MadWizard\WebAuthn\Server\Registration\RegistrationResult;
 use MadWizard\WebAuthn\Server\WebAuthnServer;
 use MadWizard\WebAuthnBundle\Exception\ClientRegistrationException;
 use MadWizard\WebAuthnBundle\Exception\RegistrationException;
@@ -42,27 +42,27 @@ class WebAuthnManager
         return new ClientOptions('create', $registrationRequest->getClientOptionsJson(), $key);
     }
 
-    public function finishRegistrationFromRequest(Request $request) : AttestationResult
+    public function finishRegistrationFromRequest(Request $request) : RegistrationResult
     {
         $data = $this->extractRequestData($request);
         return $this->finishRegistration($data['response'], $data['contextKey']);
     }
 
-    public function finishRegistration(string $responseJson, string $contextKey) : AttestationResult
+    public function finishRegistration(string $responseJson, string $contextKey) : RegistrationResult
     {
         $this->handleJsonErrorResponse($responseJson);
 
         $context = $this->contextStorage->getContext($contextKey);
 
-        if ($context === null || !($context instanceof AttestationContext)) {
+        if ($context === null || !($context instanceof RegistrationContext)) {
             throw new RegistrationException('Context key does not belong to appropriate context.');
         }
 
         try {
             $credential = JsonConverter::decodeAttestationCredential($responseJson);
-            $attestationResult = $this->server->finishRegistration($credential, $context);
+            $RegistrationResult = $this->server->finishRegistration($credential, $context);
             $this->contextStorage->removeContext($contextKey);
-            return $attestationResult;
+            return $RegistrationResult;
         } catch (WebAuthnException $e) {
             throw new RegistrationException('Registration failed: ' . $e->getMessage(), 0, $e);
         }
@@ -87,7 +87,7 @@ class WebAuthnManager
 
         $context = $this->contextStorage->getContext($contextKey);
 
-        if ($context === null || !($context instanceof AssertionContext)) {
+        if ($context === null || !($context instanceof AuthenticationContext)) {
             throw new RegistrationException('Context key does not belong to appropriate context.');
         }
 

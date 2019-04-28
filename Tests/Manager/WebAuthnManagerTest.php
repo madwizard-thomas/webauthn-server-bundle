@@ -10,18 +10,18 @@ use MadWizard\WebAuthn\Server\UserIdentity;
 use MadWizard\WebAuthn\Server\WebAuthnServer;
 use MadWizard\WebAuthnBundle\Manager\ContextStorageInterface;
 use MadWizard\WebAuthnBundle\Manager\WebAuthnManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 
 class WebAuthnManagerTest extends TestCase
 {
     /**
-     * @var WebAuthnServer|PHPUnit_Framework_MockObject_MockObject
+     * @var WebAuthnServer|MockObject
      */
     private $server;
 
     /**
-     * @var ContextStorageInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var ContextStorageInterface|MockObject
      */
     private $contextStorage;
 
